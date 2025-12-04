@@ -21,13 +21,11 @@ jobs:
           CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
           
           for FILE in $CHANGED_FILES; do
-            if [[ $FILE == lists/* ]]; then
-              # check for spam strings
-              if git diff ${{ github.event.before }} ${{ github.sha }} -- $FILE | grep -E '1.44.96.0/24|roblox'; then
-                echo "Spam found in diff for $FILE"
-                echo "::set-output name=spam_found::true"
-                exit 0
-              fi
+            # check for spam strings
+            if git diff ${{ github.event.before }} ${{ github.sha }} -- $FILE | grep -E '1.44.96.0/24|roblox'; then
+              echo "Spam found in diff for $FILE"
+              echo "::set-output name=spam_found::true"
+              exit 0
             fi
           done
 
@@ -47,5 +45,6 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
 
           body: "Если пользователю нужно - пусть сам добавляет"
+
 
 
