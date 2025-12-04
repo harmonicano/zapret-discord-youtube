@@ -2,8 +2,6 @@ name: Close spam
 
 on:
   pull_request:
-    paths:
-      - 'lists/**'
     types:
       - opened
       - synchronize
@@ -33,6 +31,9 @@ jobs:
             fi
           done
 
+          # if pull is not spam
+          echo "::set-output name=spam_found::false"
+
       - name: Close pull if spam
         if: steps.check_spam.outputs.spam_found == 'true'
         uses: peter-evans/close-pull@v3
@@ -46,4 +47,5 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
 
           body: "Если пользователю нужно - пусть сам добавляет"
+
 
