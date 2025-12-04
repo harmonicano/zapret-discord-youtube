@@ -1,0 +1,50 @@
+name: Close spam
+
+on:
+  pull_request:
+    paths:
+      - 'lists/**'
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  close-spam-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Check for spam
+        id: check_spam
+        run: |
+          # get list of changed files
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          
+          for FILE in $CHANGED_FILES; do
+            if [[ $FILE == lists/* ]]; then
+              # check for spam strings
+              if git diff ${{ github.event.before }} ${{ github.sha }} -- $FILE | grep -E '1.44.96.0/24|roblox'; then
+                echo "Spam found in diff for $FILE"
+                echo "::set-output name=spam_found::true"
+                exit 0
+              fi
+            fi
+          done
+          
+          # if pull is not spam
+          echo "::set-output name=spam_found::false"
+
+      - name: Close pull if spam
+        if: steps.check_spam.outputs.spam_found == 'true'
+        uses: peter-evans/close-pull-request@v3
+        with:
+          reason: "spam"
+
+      - name: Comment if spam
+        if: steps.check_spam.outputs.spam_found == 'true'
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: "Если пользователю нужно - пусть сам добавляет"
