@@ -38,7 +38,7 @@ jobs:
 
       - name: Close pull if spam
         if: steps.check_spam.outputs.spam_found == 'true'
-        uses: peter-evans/close-pull-request@v3
+        uses: peter-evans/close-pull@v3
         with:
           reason: "spam"
 
@@ -47,4 +47,5 @@ jobs:
         uses: peter-evans/create-or-update-comment@v3
         with:
           issue-number: ${{ github.event.pull_request.number }}
+
           body: "Если пользователю нужно - пусть сам добавляет"
