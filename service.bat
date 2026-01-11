@@ -63,12 +63,12 @@ echo      3. Check Status
 echo.
 echo   :: SETTINGS
 echo      4. Game Filter         [!GameFilterStatus!]
-echo      5. IPSet Filter        [!IPsetStatus!]
+echo      5. ipset Mode          [!IPsetStatus!]
 echo      6. Auto-Update Check   [!CheckUpdatesStatus!]
 echo.
 echo   :: UPDATES
-echo      7. Update IPSet List
-echo      8. Update Hosts File
+echo      7. Update ipset list
+echo      8. Update hosts file (for discord voice)
 echo      9. Check for Updates
 echo.
 echo   :: TOOLS
